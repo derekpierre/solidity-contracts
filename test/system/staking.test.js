@@ -1,12 +1,12 @@
 const { expect } = require("chai")
-const {
-  resetFork,
-  impersonateAccount,
-  to1e18,
-} = require("../helpers/contract-test-helpers")
+
+const { helpers } = require("hardhat")
+const { impersonateAccount } = helpers.account
+const { to1e18 } = helpers.number
+const { resetFork } = helpers.forking
+
 const { initContracts } = require("./init-contracts")
 const { keepManagedGrantAddress } = require("./constants")
-const { helpers } = require("hardhat")
 
 const describeFn =
   process.env.NODE_ENV === "system-test" ? describe : describe.skip

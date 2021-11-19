@@ -1,3 +1,7 @@
+const { helpers } = require("hardhat")
+const { impersonateAccount } = helpers.account
+const { to1e18 } = helpers.number
+
 const {
   keepTokenAddress,
   nuCypherTokenAddress,
@@ -5,10 +9,6 @@ const {
   nuCypherStakingEscrowAddress,
   keepRegistryAddress,
 } = require("./constants.js")
-const {
-  to1e18,
-  impersonateAccount,
-} = require("../helpers/contract-test-helpers")
 
 async function initContracts() {
   const deployer = await ethers.getSigner(0)
