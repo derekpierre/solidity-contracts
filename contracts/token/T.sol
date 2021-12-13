@@ -1,4 +1,20 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
+//
+// ██████████████     ▐████▌     ██████████████
+// ██████████████     ▐████▌     ██████████████
+//               ▐████▌    ▐████▌
+//               ▐████▌    ▐████▌
+// ██████████████     ▐████▌     ██████████████
+// ██████████████     ▐████▌     ██████████████
+//               ▐████▌    ▐████▌
+//               ▐████▌    ▐████▌
+//               ▐████▌    ▐████▌
+//               ▐████▌    ▐████▌
+//               ▐████▌    ▐████▌
+//               ▐████▌    ▐████▌
+//
+//
+//           Trust math, not hardware.
 
 pragma solidity 0.8.9;
 
@@ -8,7 +24,7 @@ import "@thesis/solidity-contracts/contracts/token/ERC20WithPermit.sol";
 import "@thesis/solidity-contracts/contracts/token/MisfundRecovery.sol";
 
 /// @title T token
-/// @notice Threshold Network T token.
+/// @notice Threshold Network T token
 /// @dev By default, token balance does not account for voting power.
 ///      This makes transfers cheaper. The downside is that it requires users
 ///      to delegate to themselves to activate checkpoints and have their
