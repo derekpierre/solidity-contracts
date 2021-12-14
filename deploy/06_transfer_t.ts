@@ -5,7 +5,7 @@ import { from1e18, to1e18 } from "../test/helpers/contract-test-helpers"
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { getNamedAccounts, deployments } = hre
   const { deployer } = await getNamedAccounts()
-  const { execute, read } = deployments
+  const { execute } = deployments
 
   const VendingMachineKeep = await deployments.get("VendingMachineKeep")
   const VendingMachineNuCypher = await deployments.get("VendingMachineNuCypher")
