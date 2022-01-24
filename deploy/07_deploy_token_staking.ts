@@ -1,64 +1,60 @@
 import { HardhatRuntimeEnvironment } from "hardhat/types"
 import { DeployFunction } from "hardhat-deploy/types"
 
-
-
-import { //run, 
-  ethers
-} from "hardhat"
-
-const { upgrades } = require("hardhat");
+const { ethers, upgrades } = require("hardhat");
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
-  const { getNamedAccounts, deployments} = hre
-  const { deployer } = await getNamedAccounts()
+  const { getNamedAccounts, deployments, helpers} = hre
+  const { log } = deployments
 
-  const T = await deployments.get("T")
-  const KeepTokenStaking = await deployments.get("KeepTokenStaking")
-  const NuCypherStakingEscrow = await deployments.get("NuCypherStakingEscrow")
-  const VendingMachineKeep = await deployments.get("VendingMachineKeep")
-  const VendingMachineNuCypher = await deployments.get("VendingMachineNuCypher")
-  const KeepStake = await deployments.get("KeepStake")
+  // TODO: is this the right way to check whether to do fresh proxy deploy or upgrade?
+  const OldTokenStaking = await deployments.getOrNull("TokenStaking")
+  if (
+    OldTokenStaking &&
+    helpers.address.isValid(OldTokenStaking.address)
+  ) {
+    // TODO: should the upgrade pathway be in a different script? Untested pathway
+    // Perform upgrade of proxied TokenStaking
+    log(`upgrading "TokenStaking" deployed implementation, current address ${OldTokenStaking.address}`)
+    const TokenStaking = await ethers.getContractFactory("TokenStaking")
+    const tokenStaking = await upgrades.upgradeProxy(OldTokenStaking.address, TokenStaking)
+    await tokenStaking.deployed();
+    log(`upgraded "TokenStaking" proxy at ${tokenStaking.address}`)
 
-  const tokenStakingConstructorArgs = [
-    T.address,
-    KeepTokenStaking.address,
-    NuCypherStakingEscrow.address,
-    VendingMachineKeep.address,
-    VendingMachineNuCypher.address,
-    KeepStake.address,
-  ]
-  const tokenStakingInitializerArgs = []
+    await deployments.save("TokenStaking", tokenStaking)
+  } else {
+    // freshly deploy proxied TokenStaking
+    const T = await deployments.get("T")
+    const KeepTokenStaking = await deployments.get("KeepTokenStaking")
+    const NuCypherStakingEscrow = await deployments.get("NuCypherStakingEscrow")
+    const VendingMachineKeep = await deployments.get("VendingMachineKeep")
+    const VendingMachineNuCypher = await deployments.get("VendingMachineNuCypher")
+    const KeepStake = await deployments.get("KeepStake")
 
-  // const TokenStaking = await deployments.deploy("TokenStaking", {
-  //   from: deployer,
-  //   args: [
-  //     T.address,
-  //     KeepTokenStaking.address,
-  //     NuCypherStakingEscrow.address,
-  //     VendingMachineKeep.address,
-  //     VendingMachineNuCypher.address,
-  //     KeepStake.address,
-  //   ],
-  //   log: true,
-  // })
+    const tokenStakingConstructorArgs = [
+      T.address,
+      KeepTokenStaking.address,
+      NuCypherStakingEscrow.address,
+      VendingMachineKeep.address,
+      VendingMachineNuCypher.address,
+      KeepStake.address,
+    ]
 
-  const TokenStaking = await ethers.getContractFactory("TokenStaking")
+    const tokenStakingInitializerArgs = []
 
-  const tokenStaking = await upgrades.deployProxy(
-    TokenStaking,
-    tokenStakingInitializerArgs,
-    {
-      constructorArgs: tokenStakingConstructorArgs,
-    }
-  )
+    const TokenStaking = await ethers.getContractFactory("TokenStaking")
+    const tokenStaking = await upgrades.deployProxy(
+      TokenStaking,
+      tokenStakingInitializerArgs,
+      {
+        constructorArgs: tokenStakingConstructorArgs,
+      }
+    )
+    await tokenStaking.deployed();
+    log(`"TokenStaking" deployed at proxy ${tokenStaking.address}`)
 
-  // if (hre.network.tags.tenderly) {
-  //   await hre.tenderly.verify({
-  //     name: "TokenStaking",
-  //     address: TokenStaking.address,
-  //   })
-  // }
+    await deployments.save("TokenStaking", tokenStaking)
+  }
 }
 
 export default func
