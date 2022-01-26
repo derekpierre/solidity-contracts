@@ -606,6 +606,10 @@
     "@types/sinon-chai" "^3.2.3"
     "@types/web3" "1.0.19"
 
+"@nucypher/nucypher-contracts@github:manumonti/nucypher-contracts#threshold-network":
+  version "0.0.2"
+  resolved "https://codeload.github.com/manumonti/nucypher-contracts/tar.gz/30b44aac615b13244f6c8fd4305ad5dc8fe2b074"
+
 "@openzeppelin/contracts@^4.1.0", "@openzeppelin/contracts@^4.4":
   version "4.4.0"
   resolved "https://registry.yarnpkg.com/@openzeppelin/contracts/-/contracts-4.4.0.tgz#4a1df71f736c31230bbbd634dfb006a756b51e6b"
