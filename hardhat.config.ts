@@ -6,6 +6,7 @@ import "@nomiclabs/hardhat-waffle"
 import "hardhat-gas-reporter"
 import "hardhat-deploy"
 import "@tenderly/hardhat-tenderly"
+import 'hardhat-dependency-compiler'
 
 const config: HardhatUserConfig = {
   solidity: {
@@ -97,6 +98,15 @@ const config: HardhatUserConfig = {
   },
   mocha: {
     timeout: 60000,
+  },
+  dependencyCompiler: {
+    paths: [
+      '@nucypher/nucypher-contracts/contracts/contracts/NuCypherToken.sol',
+      '@nucypher/nucypher-contracts/contracts/contracts/StakingEscrow.sol',
+      '@nucypher/nucypher-contracts/contracts/contracts/WorkLock.sol',
+      '@nucypher/nucypher-contracts/contracts/contracts/proxy/Dispatcher.sol',
+
+    ],
   },
 }
 
